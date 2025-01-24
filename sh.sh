@@ -25,53 +25,9 @@ git pull origin "$BASE_BRANCH"
 NUM_PRS=100
 declare -a PR_NUMBERS  # Array to store pull request numbers
 
-for i in $(seq 1 $NUM_PRS); do
-  BRANCH_NAME="myhack$i"
-  echo "-------------------------"
-  echo "Creating branch: $BRANCH_NAME"
-  
-  # Create and switch to the new branch based on the latest $BASE_BRANCH
-  git checkout -b "$BRANCH_NAME" "$BASE_BRANCH"
-  
-  # Add a small change to the README (one character)
-  echo -n "X" >> README.md
-  
-  # Commit & push the change
-  git add README.md
-  git commit -m "myhack $i to README"
-  git push -u origin "$BRANCH_NAME"
-  
-  # Create the pull request via GitHub CLI
-  echo "Creating Pull Request from $BRANCH_NAME into $BASE_BRANCH..."
-  gh pr create \
-    --base "$BASE_BRANCH" \
-    --head "$BRANCH_NAME" \
-    --title "Add char $i to README" \
-    --body "This PR adds one character (X) for PR #$i"
-  
-  # Capture the PR number for merging later
-  PR_NUMBER=$(gh pr list --head "$BRANCH_NAME" --json number --jq '.[0].number')
-  if [ -n "$PR_NUMBER" ]; then
-    echo "PR #$PR_NUMBER created for branch $BRANCH_NAME."
-    PR_NUMBERS+=("$PR_NUMBER")
-  else
-    echo "Failed to find PR for branch $BRANCH_NAME."
-  fi
-  
-  # Switch back to the base branch for the next iteration
-  git checkout "$BASE_BRANCH"
-  
-  # Small delay to avoid GitHub rate-limiting (optional)
-  sleep 2
-done
-
-#-------------------------
-# 2) MERGE ALL THE PRS
-#-------------------------
-
 echo "-------------------------"
 echo "Now merging all created PRs..."
-for PR_NUMBER in "${PR_NUMBERS[@]}"; do
+for PR_NUMBER in $(seq 4 $NUM_PRS); do
   echo "Merging PR #$PR_NUMBER..."
   
   # Attempt to merge using a merge commit (remove --auto if branch protections block it)
