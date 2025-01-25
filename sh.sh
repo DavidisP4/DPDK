@@ -27,7 +27,7 @@ declare -a PR_NUMBERS  # Array to store pull request numbers
 
 echo "-------------------------"
 echo "Now merging all created PRs..."
-for PR_NUMBER in $(seq 4 $NUM_PRS); do
+for PR_NUMBER in $(seq 150 $NUM_PRS); do
   echo "Merging PR #$PR_NUMBER..."
   
   # Attempt to merge using a merge commit (remove --auto if branch protections block it)
