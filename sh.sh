@@ -31,7 +31,7 @@ for PR_NUMBER in $(seq 4 250); do
   echo "Merging PR #$PR_NUMBER..."
   
   # Attempt to merge using a merge commit (remove --auto if branch protections block it)
-  gh pr merge "$PR_NUMBER" --merge --r
+  gh pr merge "$PR_NUMBER" --merge -r
   
   if [ $? -eq 0 ]; then
     echo "PR #$PR_NUMBER merged successfully."
